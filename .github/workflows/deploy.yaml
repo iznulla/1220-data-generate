@@ -19,7 +19,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          source: "./datagenerate/target/datagenerate-0.0.1-SNAPSHOT.jar"
+          source: "/datagenerate/target/datagenerate-0.0.1-SNAPSHOT.jar"
           target: "/home/mcargo/datagen"
 
       - name: SSH into VPS and restart Docker Compose
