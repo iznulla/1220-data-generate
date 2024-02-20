@@ -1,0 +1,34 @@
+spring:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    defer-datasource-initialization: true
+    database: default
+  sql:
+    init:
+      mode: always
+
+dataone:
+  datasource:
+    platform: h2
+    driver-class-name: org.h2.Driver
+    jdbc-url: ${TEST_DB_URL}
+    username: ${TEST_DB_USERNAME}
+    password: ${TEST_DB_PASSWORD}
+
+datatwo:
+  datasource:
+    platform: h2
+    driver-class-name: org.h2.Driver
+    jdbc-url: ${TEST_DB_URL}
+    username: ${TEST_DB_USERNAME}
+    password: ${TEST_DB_PASSWORD}
+#    maximum-pool-size: 1
+
+
+
+
+
+
+
