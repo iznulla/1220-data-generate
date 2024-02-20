@@ -1,13 +1,14 @@
-FROM vegardit/graalvm-maven:latest-java17 as builder
-WORKDIR /app
-COPY . /app/.
-RUN mvn -f /app/pom.xml clean package -DskipTests
+#FROM vegardit/graalvm-maven:latest-java17 as builder
+#WORKDIR /app
+#COPY . /app/.
+#RUN mvn -f /app/pom.xml clean package -DskipTests
 
 
 FROM openjdk:17-oracle
 WORKDIR /app
-COPY --from=builder /app/target/*.jar /app/*.jar
-COPY --from=builder /app/.env /app/.env
-#COPY --from=builder /app/images /app/images
-EXPOSE 8080
+
+COPY ./target/*.jar /app/*.jar
+COPY ./.env /app/.env
+
+EXPOSE 8181
 ENTRYPOINT ["java", "-jar", "/app/*.jar"]
