@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/base-faker-classes")
+@CrossOrigin
 public class BaseFakerClassesApi {
     private final FakerBaseClassService methodService;
 

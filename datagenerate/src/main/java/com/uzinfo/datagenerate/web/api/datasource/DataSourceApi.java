@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/datasource")
+@CrossOrigin
 public class DataSourceApi {
     private final DataSourcePropertiesService dataSourcePropertiesService;
 

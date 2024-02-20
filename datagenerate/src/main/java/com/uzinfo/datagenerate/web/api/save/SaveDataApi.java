@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/generate")
+@CrossOrigin
 public class SaveDataApi {
     private final SaveGeneratedDataService saveGeneratedDataService;
 //    private final DataSourceContextHolder dataSourceContextHolder;
