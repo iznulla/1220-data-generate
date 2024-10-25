@@ -14,19 +14,19 @@ spring:
 
 dataone:
   datasource:
-    platform: h2
-    driver-class-name: org.h2.Driver
-    jdbc-url: ${TEST_DB_URL}
-    username: ${TEST_DB_USERNAME}
-    password: ${TEST_DB_PASSWORD}
+    platform: org.hibernate.dialect.PostgreSQLDialect
+    driver-class-name: org.postgresql.Driver
+    jdbc-url: jdbc:postgresql://localhost:5432/postgres
+    username: user
+    password: WIN1251
 
 datatwo:
   datasource:
     platform: h2
     driver-class-name: org.h2.Driver
-    jdbc-url: ${TEST_DB_URL}
-    username: ${TEST_DB_USERNAME}
-    password: ${TEST_DB_PASSWORD}
+    jdbc-url: jdbc:h2:./base-data-b;AUTO_SERVER=true;
+    username: sa
+    password: password
 #    maximum-pool-size: 1
 
 
