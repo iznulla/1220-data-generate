@@ -42,6 +42,7 @@ public class DataSourceApi {
             summary = "POST create data source properties",
             description = "Добавляет в базу данных свойства базы данных"
     )
+    @CrossOrigin
     @PostMapping
     public ResponseEntity<?> create(@RequestBody DataSourceDto dataSourceDto) {
         return new ResponseEntity<>(dataSourcePropertiesService.create(dataSourceDto), HttpStatus.CREATED);
