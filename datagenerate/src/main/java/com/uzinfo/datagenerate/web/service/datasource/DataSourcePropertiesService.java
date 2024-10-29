@@ -52,8 +52,11 @@ public class DataSourcePropertiesService {
             dataBaseEntity.setUsername(dataSourceDto.getUsername());
             dataBaseEntity.setPassword(dataSourceDto.getPassword());
             dataBaseEntity.setDriver(dataSourceDto.getDriver());
-            dataSourcePropertiesRepository.save(dataBaseEntity);
-            return DataSourceDto.from(dataBaseEntity);
+            dataBaseEntity.setDescription(dataSourceDto.getDescription());
+            DataBaseEntity savedDataBase = dataSourcePropertiesRepository.save(dataBaseEntity);
+            DataSourceDto dataSourceDtoResponse = DataSourceDto.from(savedDataBase);
+            dataSourceDtoResponse.setAddedStatus(true);
+            return dataSourceDtoResponse;
         } catch (Exception e) {
             throw new ResourceNotFoundException(e.getMessage());
         }

@@ -44,8 +44,9 @@ public class DataSourceApi {
     )
     @CrossOrigin
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody DataSourceDto dataSourceDto) {
-        return new ResponseEntity<>(dataSourcePropertiesService.create(dataSourceDto), HttpStatus.CREATED);
+    public ResponseEntity<DataSourceDto> create(@RequestBody DataSourceDto dataSourceDto) {
+        DataSourceDto d = dataSourcePropertiesService.create(dataSourceDto);
+        return new ResponseEntity<>(d, HttpStatus.CREATED);
     }
 
     @ApiResponses({
