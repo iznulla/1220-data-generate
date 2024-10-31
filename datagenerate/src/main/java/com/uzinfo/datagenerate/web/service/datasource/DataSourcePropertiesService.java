@@ -75,6 +75,13 @@ public class DataSourcePropertiesService {
         ));
     }
 
+    public void deleteById(Long id) {
+        if (!dataSourcePropertiesRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Data Source not found with id " + id);
+        }
+        dataSourcePropertiesRepository.deleteById(id);
+    }
+
     public List<DataSourceDto> getAll() {
         return dataSourcePropertiesRepository.findAll().stream().map(DataSourceDto::from).toList();
     }

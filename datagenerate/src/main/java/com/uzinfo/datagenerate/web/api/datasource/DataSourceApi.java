@@ -89,4 +89,17 @@ public class DataSourceApi {
     }
 
 
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema()) }),
+            @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = ResourceNotFoundException.class)) }),
+            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
+    @Operation(
+            summary = "DELETE delete data source properties by id",
+            description = "Удаляет свойства базы данных по id из базы данных"
+    )
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        dataSourcePropertiesService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
