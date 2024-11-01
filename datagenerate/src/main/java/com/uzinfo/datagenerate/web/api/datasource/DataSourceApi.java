@@ -42,11 +42,23 @@ public class DataSourceApi {
             summary = "POST create data source properties",
             description = "Добавляет в базу данных свойства базы данных"
     )
-    @CrossOrigin
     @PostMapping
     public ResponseEntity<DataSourceDto> create(@RequestBody DataSourceDto dataSourceDto) {
         DataSourceDto d = dataSourcePropertiesService.create(dataSourceDto);
         return new ResponseEntity<>(d, HttpStatus.CREATED);
+    }
+
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", content = { @Content(schema = @Schema(implementation = DataSourceDto.class)) }),
+            @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = ResourceNotFoundException.class)) }),
+            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
+    @Operation(
+            summary = "PUT update data source properties",
+            description = "Обновляет в базе данных свойства базы данных"
+    )
+    @PutMapping
+    public ResponseEntity<DataSourceDto> update(@RequestBody DataSourceDto dataSourceDto) {
+        return new ResponseEntity<>(dataSourcePropertiesService.create(dataSourceDto), HttpStatus.OK);
     }
 
     @ApiResponses({

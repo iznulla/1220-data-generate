@@ -3,6 +3,7 @@ package com.uzinfo.datagenerate.web.service.datasource;
 import com.uzinfo.datagenerate.web.configuration.datasource.*;
 import com.uzinfo.datagenerate.web.dto.datasource.DataSourceDto;
 import com.uzinfo.datagenerate.web.entity.DataBaseEntity;
+import com.uzinfo.datagenerate.web.entity.mapper.DataBaseEntityMapper;
 import com.uzinfo.datagenerate.web.exception.ResourceNotFoundException;
 import com.uzinfo.datagenerate.web.repository.base.DataSourcePropertiesRepository;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class DataSourcePropertiesService {
 
     private final DataSourceTwoConfig dataSourceTwoConfig;
     private  final DataSourceRouting dataSourceRouting;
+    private final DataBaseEntityMapper dataBaseEntityMapper;
 
     public String setDataSourceProperties(String name) {
         DataSourceDto dataSourceDto = DataSourceDto.from(dataSourcePropertiesRepository.findByName(name).orElseThrow(
@@ -46,22 +48,35 @@ public class DataSourcePropertiesService {
 
     public DataSourceDto create(DataSourceDto dataSourceDto) {
         try {
-            DataBaseEntity dataBaseEntity = new DataBaseEntity();
-            dataBaseEntity.setName(dataSourceDto.getName());
-            dataBaseEntity.setUrl(dataSourceDto.getUrl());
-            dataBaseEntity.setUsername(dataSourceDto.getUsername());
-            dataBaseEntity.setPassword(dataSourceDto.getPassword());
-            dataBaseEntity.setDriver(dataSourceDto.getDriver());
-            dataBaseEntity.setDescription(dataSourceDto.getDescription());
-            DataBaseEntity savedDataBase = dataSourcePropertiesRepository.save(dataBaseEntity);
-            DataSourceDto dataSourceDtoResponse = DataSourceDto.from(savedDataBase);
-            dataSourceDtoResponse.setAddedStatus(true);
-            return dataSourceDtoResponse;
+            if (dataSourceDto.getId() != null) {
+                DataBaseEntity dataBaseEntity = dataSourcePropertiesRepository.findById(dataSourceDto.getId()).orElseThrow(
+                        () -> new ResourceNotFoundException("Data Source not found with id " + dataSourceDto.getId())
+                );
+                dataBaseEntityMapper.updateDataBaseEntityFromDTO(dataSourceDto, dataBaseEntity);
+                DataBaseEntity dataBaseEntitySaved = dataSourcePropertiesRepository.save(dataBaseEntity);
+                DataSourceDto dataSourceDtoResponse = DataSourceDto.from(dataBaseEntitySaved);
+                dataSourceDtoResponse.setAddedStatus(true);
+                return dataSourceDtoResponse;
+            } else {
+                DataBaseEntity dataBaseEntity = dataBaseEntityMapper.fromDTO(dataSourceDto);
+                DataBaseEntity savedDataBase = dataSourcePropertiesRepository.save(dataBaseEntity);
+                DataSourceDto dataSourceDtoResponse = DataSourceDto.from(savedDataBase);
+                dataSourceDtoResponse.setAddedStatus(true);
+                return dataSourceDtoResponse;
+            }
         } catch (Exception e) {
             throw new ResourceNotFoundException(e.getMessage());
         }
 
     }
+
+//    public DataSourceDto update(DataSourceDto dataSourceDto) {
+//        DataBaseEntity dataBaseEntity = dataSourcePropertiesRepository.findById(dataSourceDto.getId()).orElseThrow(
+//                () -> new ResourceNotFoundException("Data Source not found with id " + dataSourceDto.getId())
+//        );
+//        dataBaseEntityMapper.updateDataBaseEntityFromDTO(dataSourceDto, dataBaseEntity);
+//        return DataSourceDto.from(dataSourcePropertiesRepository.save(dataBaseEntity));
+//    }
 
     public DataSourceDto getByName(String name) {
         return DataSourceDto.from(dataSourcePropertiesRepository.findByName(name).orElseThrow(
