@@ -28,11 +28,6 @@ public class DataSourceApi {
             summary = "POST set data source properties and select database by name",
             description = "Устанавливает свойства базы данных и выбирает базу данных по названию из базы данных"
     )
-//    @PostMapping("/property/{name}")
-//    public ResponseEntity<String> setProperties(@PathVariable String name) {
-//        return new ResponseEntity<>(dataSourcePropertiesService.setDataSourceProperties(name), HttpStatus.CREATED);
-//    }
-
     @PostMapping("/property/{id}")
     public ResponseEntity<String> setProperties(@PathVariable Long id) {
         return new ResponseEntity<>(dataSourcePropertiesService.setDataSourceProperties(id), HttpStatus.CREATED);

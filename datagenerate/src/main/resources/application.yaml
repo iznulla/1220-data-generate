@@ -14,11 +14,16 @@ spring:
 
 dataone:
   datasource:
-    platform: org.hibernate.dialect.PostgreSQLDialect
-    driver-class-name: org.postgresql.Driver
-    jdbc-url: jdbc:postgresql://localhost:5432/postgres
-    username: user
-    password: WIN1251
+    platform: h2
+    driver-class-name: org.h2.Driver
+    jdbc-url: jdbc:h2:./base-data-b;AUTO_SERVER=true;
+    username: sa
+    password: password
+#    platform: org.hibernate.dialect.PostgreSQLDialect
+#    driver-class-name: org.postgresql.Driver
+#    jdbc-url: jdbc:postgresql://localhost:5432/toir
+#    username: codela
+#    password: 1
 
 datatwo:
   datasource:
