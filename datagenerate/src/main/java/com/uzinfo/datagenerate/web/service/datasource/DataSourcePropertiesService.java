@@ -6,9 +6,12 @@ import com.uzinfo.datagenerate.web.entity.DataBaseEntity;
 import com.uzinfo.datagenerate.web.entity.mapper.DataBaseEntityMapper;
 import com.uzinfo.datagenerate.web.exception.ResourceNotFoundException;
 import com.uzinfo.datagenerate.web.repository.base.DataSourcePropertiesRepository;
+import com.uzinfo.datagenerate.web.service.table.TableService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,16 +23,18 @@ import java.util.Map;
 public class DataSourcePropertiesService {
     private final DataSourcePropertiesRepository dataSourcePropertiesRepository;
 
+    private final TableService tableService;
+
     private final DataSourceTwoConfig dataSourceTwoConfig;
     private  final DataSourceRouting dataSourceRouting;
     private final DataBaseEntityMapper dataBaseEntityMapper;
 
-    public String setDataSourceProperties(String name) {
-        DataSourceDto dataSourceDto = DataSourceDto.from(dataSourcePropertiesRepository.findByName(name).orElseThrow(
-                () -> new ResourceNotFoundException("Data Source not found with id " + name)
+    @Transactional
+    public String setDataSourceProperties(Long id) {
+        DataSourceDto dataSourceDto = DataSourceDto.from(dataSourcePropertiesRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Data Source not found with id " + id)
         ));
         try {
-            dataSourceRouting.getConnection().close();
             dataSourceTwoConfig.setJdbcUrl(dataSourceDto.getUrl());
             dataSourceTwoConfig.setUsername(dataSourceDto.getUsername());
             dataSourceTwoConfig.setPassword(dataSourceDto.getPassword());
@@ -39,6 +44,7 @@ public class DataSourcePropertiesService {
             dataSourceRouting.setDataSourceMap(dataSourceMap);
             DataSourceContextHolder.clearBranchContext();
             DataSourceContextHolder.setBranchContext(DataSourceEnum.DATASOURCE_DEST);
+            tableService.getTables().orElseThrow();
 
         } catch (Exception e) {
             throw new ResourceNotFoundException(e.getMessage());
@@ -69,14 +75,6 @@ public class DataSourcePropertiesService {
         }
 
     }
-
-//    public DataSourceDto update(DataSourceDto dataSourceDto) {
-//        DataBaseEntity dataBaseEntity = dataSourcePropertiesRepository.findById(dataSourceDto.getId()).orElseThrow(
-//                () -> new ResourceNotFoundException("Data Source not found with id " + dataSourceDto.getId())
-//        );
-//        dataBaseEntityMapper.updateDataBaseEntityFromDTO(dataSourceDto, dataBaseEntity);
-//        return DataSourceDto.from(dataSourcePropertiesRepository.save(dataBaseEntity));
-//    }
 
     public DataSourceDto getByName(String name) {
         return DataSourceDto.from(dataSourcePropertiesRepository.findByName(name).orElseThrow(

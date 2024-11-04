@@ -23,10 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TableRepositoryImpl implements TableRepository {
     private final JdbcTemplate jdbcTemplate;
-//    @Autowired
-//    @Qualifier("appDataSource")
-//    private DataSource dataSource;
-//
+
     private final DataSourceRouting dataSourceRouting;
 
     public void createTable(String sql) {
