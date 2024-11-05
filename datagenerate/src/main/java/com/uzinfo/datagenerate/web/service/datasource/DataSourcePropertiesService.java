@@ -9,7 +9,6 @@ import com.uzinfo.datagenerate.web.repository.base.DataSourcePropertiesRepositor
 import com.uzinfo.datagenerate.web.service.table.TableService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
