@@ -28,7 +28,7 @@ public class TableApi {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-        @ApiResponses({
+    @ApiResponses({
             @ApiResponse(responseCode = "201", content = { @Content(schema = @Schema(implementation = TableModel.class)) }),
             @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = ResourceNotFoundException.class)) }),
             @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
@@ -38,7 +38,19 @@ public class TableApi {
     )
     @GetMapping("/api/v1/tables")
     public ResponseEntity<?> getTables() {
-            return new ResponseEntity<>(tableService.getTables(), HttpStatus.OK);
+        return new ResponseEntity<>(tableService.getTables(), HttpStatus.OK);
     }
 
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", content = { @Content(schema = @Schema(implementation = TableModel.class)) }),
+            @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = ResourceNotFoundException.class)) }),
+            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
+    @Operation(
+            summary = "GET get All cached Tables and Fields from current database",
+            description = "Получает все кэшированные таблицы и поля из базы данных"
+    )
+    @GetMapping("/api/v1/tables-proxy")
+    public ResponseEntity<?> getTablesProxy() {
+        return new ResponseEntity<>(tableService.getTablesProxy(), HttpStatus.OK);
+    }
 }

@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface TableService {
     void create(TableDto sql);
     Optional<List<TableModel>> getTables();
+    Optional<List<TableModel>> getTablesProxy();
 }

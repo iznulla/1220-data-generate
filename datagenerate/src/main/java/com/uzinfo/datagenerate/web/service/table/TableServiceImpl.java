@@ -23,6 +23,13 @@ public class TableServiceImpl implements TableService {
     @Override
     public Optional<List<TableModel>> getTables() {
         DataSourceContextHolder.setBranchContext(DataSourceEnum.DATASOURCE_DEST);
-        return Optional.of(tableRepository.getTables().orElseThrow());
+        return Optional.of(tableRepository.getTables(1, 2).orElseThrow());
     }
+
+
+    @Override
+    public Optional<List<TableModel>> getTablesProxy() {
+        return Optional.of(tableRepository.getTablesProxy().orElseThrow());
+    }
+
 }
