@@ -11,6 +11,6 @@ public interface TableRepository {
     void createTable(String sql);
 
 //    Optional<List<TableModel>> getTables();
-    Optional<List<TableModel>> getTables(int page, int pageSize);
+    Optional<List<TableModel>> getTables();
     Optional<List<TableModel>> getTablesProxy();
 }

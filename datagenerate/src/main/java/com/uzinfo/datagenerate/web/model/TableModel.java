@@ -13,5 +13,8 @@ import java.util.List;
 @Builder
 public class TableModel {
     private String tableName;
-    private List<String> columns;
+    private String primaryKeyName;
+    private int columnsCount;
+    private Long tableLastId;
+    private List<ColumnModel> columns;
 }

@@ -2,6 +2,7 @@ package com.uzinfo.datagenerate.web.repository.app;
 
 import com.uzinfo.datagenerate.web.configuration.datasource.DataSourceRouting;
 import com.uzinfo.datagenerate.web.exception.ResourceNotFoundException;
+import com.uzinfo.datagenerate.web.model.ColumnModel;
 import com.uzinfo.datagenerate.web.model.TableModel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -10,9 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Data
 @Repository
@@ -33,34 +32,52 @@ public class TableRepositoryImpl implements TableRepository {
     }
 
     @Override
-    public Optional<List<TableModel>> getTables(int page, int pageSize) {
+    public Optional<List<TableModel>> getTables() {
         try {
             DatabaseMetaData metaData = dataSourceRouting.getConnection().getMetaData();
-            ResultSet tablesRS = metaData.getTables(null, "ORA_USER", null, new String[]{"TABLE"});
+            ResultSet tablesRS = metaData.getTables(null, null, null, new String[]{"TABLE"});
             List<TableModel> tableModelList = new ArrayList<>();
-//            int start = (page - 1) * pageSize;
-//            int end = start + pageSize;
-//            int currentIndex = 0;
-
-            // Перебор записей с учетом пагинации
             while (tablesRS.next()) {
-//                if (currentIndex >= start && currentIndex < end) {
-                    TableModel table = new TableModel();
-                    table.setTableName(tablesRS.getString("TABLE_NAME"));
+                String tableName = tablesRS.getString("TABLE_NAME");
+                TableModel table = new TableModel();
+                table.setTableName(tableName);
 
-                    ResultSet columnsRS = metaData.getColumns(null, null, tablesRS.getString("TABLE_NAME"), null);
-                    List<String> columns = new ArrayList<>();
-                    while (columnsRS.next()) {
-                        columns.add(columnsRS.getString("COLUMN_NAME") + " " + columnsRS.getString("TYPE_NAME"));
-                    }
-                    table.setColumns(columns);
-                    tableModelList.add(table);
+
+                ResultSet pKey = metaData.getPrimaryKeys(null, null, tableName);
+                if (pKey.last()) {
+                    table.setPrimaryKeyName(pKey.getString("PK_NAME"));
                 }
-//                if (currentIndex >= end) {
-//                    break;
-//                }
-//                currentIndex++;
-//            }
+
+                ResultSet importedKeys = metaData.getImportedKeys(null, null, tableName);
+                Map<String, String> fkColumnsAndTables = new HashMap<>();
+                while (importedKeys.next()) {
+                    String fkColumnName = importedKeys.getString("PKCOLUMN_NAME");
+                    String fkTableName = importedKeys.getString("PKTABLE_NAME");
+                    fkColumnsAndTables.put(fkColumnName, fkTableName);
+                }
+
+                List<ColumnModel> columns = new ArrayList<>();
+                ResultSet columnsRS = metaData.getColumns(null, null, tablesRS.getString("TABLE_NAME"), null);
+                while (columnsRS.next()) {
+                    ColumnModel column = new ColumnModel();
+                    String columnName = columnsRS.getString("COLUMN_NAME");
+                    column.setName(columnName);
+                    column.setType(columnsRS.getString("TYPE_NAME"));
+                    column.setNullable(columnsRS.getString("IS_NULLABLE"));
+                    column.setIsAutoIncrement(columnsRS.getString("IS_AUTOINCREMENT"));
+                    column.setIsGeneratedColumn(columnsRS.getString("IS_GENERATEDCOLUMN"));
+//                    column.setKeySeq(columnsRS.getShort("KEY_SEQ"));
+                    if (fkColumnsAndTables.containsKey(columnName)) {
+                        column.setFk(true);
+                        column.setForeignKeyTable(fkColumnsAndTables.get(columnName));
+                    }
+                    columns.add(column);
+                }
+                table.setColumns(columns);
+                table.setColumnsCount(columns.size());
+
+                tableModelList.add(table);
+            }
             this.tableModelListProxy.clear();
             this.tableModelListProxy = tableModelList;
             return Optional.of(tableModelList);
