@@ -17,5 +17,4 @@ public class ColumnModel {
     private String isGeneratedColumn;
     private short keySeq;
     private boolean isFk;
-    private String foreignKeyTable;
 }

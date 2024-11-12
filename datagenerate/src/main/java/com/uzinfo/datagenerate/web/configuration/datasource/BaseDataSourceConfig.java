@@ -66,8 +66,8 @@ public class BaseDataSourceConfig {
         Properties properties = new Properties();
         properties.put("hibernate.show_sql", true);
         properties.put("hibernate.format_sql", true);
-        properties.put("hibernate.hbm2ddl.auto", "create-drop");
-        properties.put("spring.jpa.generate-ddl", true);
+//        properties.put("hibernate.hbm2ddl.auto", "create");
+        properties.put("spring.jpa.generate-ddl", false);
         return properties;
     }
 }

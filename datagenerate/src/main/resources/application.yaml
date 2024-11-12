@@ -8,9 +8,9 @@ spring:
   jpa:
     defer-datasource-initialization: true
     database: default
-  sql:
-    init:
-      mode: always
+#  sql:
+#    init:
+#      mode: always
 
 dataone:
   datasource:

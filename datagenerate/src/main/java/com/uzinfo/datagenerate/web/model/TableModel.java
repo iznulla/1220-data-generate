@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -17,4 +18,5 @@ public class TableModel {
     private int columnsCount;
     private Long tableLastId;
     private List<ColumnModel> columns;
+    private Map<String, String> fkColumnsAndTables;
 }
