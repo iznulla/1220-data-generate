@@ -1,0 +1,32 @@
+version: '3.1'
+
+services:
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+#    network_mode: 'host'
+    volumes:
+      - ./src/main/docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+#    network_mode: 'host'
+    volumes:
+      - ./src/main/docker/grafana/provisioning/datasources/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml  # Подключаем datasource
+      - ./src/main/docker/grafana/provisioning/dashboards/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml  # Подключаем dashboard
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+#  ibd-backend:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    restart: always
+#    container_name: ibd-backend
+#    network_mode: 'host'
+#    volumes:
+#      - gradle_cache:/root/.gradle
+
