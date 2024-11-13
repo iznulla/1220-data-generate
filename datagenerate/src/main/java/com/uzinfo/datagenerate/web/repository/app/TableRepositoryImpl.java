@@ -39,8 +39,9 @@ public class TableRepositoryImpl implements TableRepository {
         try (Connection connection = dataSourceRouting.getConnection()) {
             DatabaseMetaData metaData = connection.getMetaData();
 
-            try (ResultSet tablesRS = metaData.getTables(null, (metaData.getUserName() == null || metaData.getUserName().equals("user")) ? null : metaData.getUserName(), null, new String[]{"TABLE"})) {
-                System.out.println("FFFFF" + metaData.getUserName());
+            try (ResultSet tablesRS = metaData.getTables(null, (metaData.getUserName() == null
+                            || metaData.getUserName().equals("user")) ? null : metaData.getUserName(),
+                    null, new String[]{"TABLE"})) {
                 while (tablesRS.next()) {
                     String tableName = tablesRS.getString("TABLE_NAME");
                     TableModel table = new TableModel();
@@ -98,11 +99,7 @@ public class TableRepositoryImpl implements TableRepository {
 
     @Override
     public Optional<List<TableModel>> getTablesProxy() {
-        try {
-            return Optional.of(tableModelListProxy);
-        } catch (Exception e) {
-            throw new ResourceNotFoundException("Tables not found\n" + e.getMessage());
-        }
+        return Optional.of(tableModelListProxy);
     }
 
 }
