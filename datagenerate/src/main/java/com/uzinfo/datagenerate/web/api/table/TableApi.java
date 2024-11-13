@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/table")
@@ -37,8 +39,8 @@ public class TableApi {
             description = "Получает все таблицы и полей из базы данных"
     )
     @GetMapping("/api/v1/tables")
-    public ResponseEntity<?> getTables() {
-        return new ResponseEntity<>(tableService.getTables(), HttpStatus.OK);
+    public ResponseEntity<List<TableModel>> getTables() {
+        return new ResponseEntity<>(tableService.getTables().orElseThrow(), HttpStatus.OK);
     }
 
     @ApiResponses({
@@ -50,7 +52,7 @@ public class TableApi {
             description = "Получает все кэшированные таблицы и поля из базы данных"
     )
     @GetMapping("/api/v1/tables-proxy")
-    public ResponseEntity<?> getTablesProxy() {
-        return new ResponseEntity<>(tableService.getTablesProxy(), HttpStatus.OK);
+    public ResponseEntity<List<TableModel>> getTablesProxy() {
+        return new ResponseEntity<>(tableService.getTablesProxy().orElseThrow(), HttpStatus.OK);
     }
 }

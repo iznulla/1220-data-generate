@@ -39,7 +39,8 @@ public class TableRepositoryImpl implements TableRepository {
         try (Connection connection = dataSourceRouting.getConnection()) {
             DatabaseMetaData metaData = connection.getMetaData();
 
-            try (ResultSet tablesRS = metaData.getTables(null, "MVD_IBD", null, new String[]{"TABLE"})) {
+            try (ResultSet tablesRS = metaData.getTables(null, (metaData.getUserName() == null || metaData.getUserName().equals("user")) ? null : metaData.getUserName(), null, new String[]{"TABLE"})) {
+                System.out.println("FFFFF" + metaData.getUserName());
                 while (tablesRS.next()) {
                     String tableName = tablesRS.getString("TABLE_NAME");
                     TableModel table = new TableModel();
@@ -64,8 +65,9 @@ public class TableRepositoryImpl implements TableRepository {
                     table.setFkColumnsAndTables(fkColumnsAndTables);
 
                     // Получение списка столбцов таблицы
-                    List<ColumnModel> columns = new ArrayList<>();
-                    try (ResultSet columnsRS = metaData.getColumns(null, null, tableName, null)) {
+
+                    try (ResultSet columnsRS = metaData.getColumns(null, metaData.getUserName(), tableName, null)) {
+                        List<ColumnModel> columns = new ArrayList<>();
                         while (columnsRS.next()) {
                             ColumnModel column = new ColumnModel();
                             column.setName(columnsRS.getString("COLUMN_NAME"));
@@ -75,10 +77,11 @@ public class TableRepositoryImpl implements TableRepository {
                             column.setIsGeneratedColumn(columnsRS.getString("IS_GENERATEDCOLUMN"));
                             columns.add(column);
                         }
+                        table.setColumns(columns);
+                        table.setColumnsCount(columns.size());
                     }
 
-                    table.setColumns(columns);
-                    table.setColumnsCount(columns.size());
+
                     tableModelList.add(table);
                 }
             }
