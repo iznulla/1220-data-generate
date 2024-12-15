@@ -10,4 +10,5 @@ public interface TableService {
     void create(TableDto sql);
     Optional<List<TableModel>> getTables();
     Optional<List<TableModel>> getTablesProxy();
+    Optional<TableModel> getTableByName(String tableName);
 }

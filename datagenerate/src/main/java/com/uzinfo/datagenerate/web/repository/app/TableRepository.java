@@ -13,4 +13,5 @@ public interface TableRepository {
 //    Optional<List<TableModel>> getTables();
     Optional<List<TableModel>> getTables();
     Optional<List<TableModel>> getTablesProxy();
+    Optional<TableModel> getTableByName(String tableName);
 }

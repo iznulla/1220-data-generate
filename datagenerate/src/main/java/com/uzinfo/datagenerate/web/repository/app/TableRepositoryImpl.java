@@ -39,8 +39,7 @@ public class TableRepositoryImpl implements TableRepository {
         try (Connection connection = dataSourceRouting.getConnection()) {
             DatabaseMetaData metaData = connection.getMetaData();
 
-            try (ResultSet tablesRS = metaData.getTables(null, (metaData.getUserName() == null
-                            || metaData.getUserName().equals("user")) ? null : metaData.getUserName(),
+            try (ResultSet tablesRS = metaData.getTables(null, null,
                     null, new String[]{"TABLE"})) {
                 while (tablesRS.next()) {
                     String tableName = tablesRS.getString("TABLE_NAME");
@@ -67,7 +66,7 @@ public class TableRepositoryImpl implements TableRepository {
 
                     // Получение списка столбцов таблицы
 
-                    try (ResultSet columnsRS = metaData.getColumns(null, metaData.getUserName(), tableName, null)) {
+                    try (ResultSet columnsRS = metaData.getColumns(null, null, tableName, null)) {
                         List<ColumnModel> columns = new ArrayList<>();
                         while (columnsRS.next()) {
                             ColumnModel column = new ColumnModel();
@@ -100,6 +99,11 @@ public class TableRepositoryImpl implements TableRepository {
     @Override
     public Optional<List<TableModel>> getTablesProxy() {
         return Optional.of(tableModelListProxy);
+    }
+
+    @Override
+    public Optional<TableModel> getTableByName(String tableName) {
+        return Optional.of(tableModelListProxy.stream().filter(tableModel -> tableModel.getTableName().equals(tableName)).findFirst().orElseThrow());
     }
 
 }

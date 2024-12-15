@@ -55,4 +55,17 @@ public class TableApi {
     public ResponseEntity<List<TableModel>> getTablesProxy() {
         return new ResponseEntity<>(tableService.getTablesProxy().orElseThrow(), HttpStatus.OK);
     }
+
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", content = { @Content(schema = @Schema(implementation = TableModel.class)) }),
+            @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = ResourceNotFoundException.class)) }),
+            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
+    @Operation(
+            summary = "GET get Table by name",
+            description = "Получает таблицу по имени"
+    )
+    @GetMapping("/api/v1/tables-proxy/{tableName}")
+    public ResponseEntity<TableModel> getTableByName(@PathVariable String tableName) {
+        return new ResponseEntity<>(tableService.getTableByName(tableName).orElseThrow(), HttpStatus.OK);
+    }
 }

@@ -32,4 +32,9 @@ public class TableServiceImpl implements TableService {
         return Optional.of(tableRepository.getTablesProxy().orElseThrow());
     }
 
+    @Override
+    public Optional<TableModel> getTableByName(String tableName) {
+        return Optional.of(tableRepository.getTableByName(tableName).orElseThrow());
+    }
+
 }
