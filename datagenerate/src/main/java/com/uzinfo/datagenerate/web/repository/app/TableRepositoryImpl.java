@@ -39,7 +39,7 @@ public class TableRepositoryImpl implements TableRepository {
         try (Connection connection = dataSourceRouting.getConnection()) {
             DatabaseMetaData metaData = connection.getMetaData();
 
-            try (ResultSet tablesRS = metaData.getTables(null, null,
+            try (ResultSet tablesRS = metaData.getTables(null, "public",
                     null, new String[]{"TABLE"})) {
                 while (tablesRS.next()) {
                     String tableName = tablesRS.getString("TABLE_NAME");
@@ -47,7 +47,7 @@ public class TableRepositoryImpl implements TableRepository {
                     table.setTableName(tableName);
 
                     // Получение первичного ключа
-                    try (ResultSet pKey = metaData.getPrimaryKeys(null, null, tableName)) {
+                    try (ResultSet pKey = metaData.getPrimaryKeys(null, "public", tableName)) {
                         if (pKey.next()) {
                             table.setPrimaryKeyName(pKey.getString("PK_NAME"));
                         }
@@ -55,7 +55,7 @@ public class TableRepositoryImpl implements TableRepository {
 
                     // Получение внешних ключей
                     Map<String, String> fkColumnsAndTables = new HashMap<>();
-                    try (ResultSet importedKeys = metaData.getImportedKeys(null, null, tableName)) {
+                    try (ResultSet importedKeys = metaData.getImportedKeys(null, "public", tableName)) {
                         while (importedKeys.next()) {
                             String fkColumnName = importedKeys.getString("FKCOLUMN_NAME");
                             String pkTableName = importedKeys.getString("PKTABLE_NAME");
@@ -66,7 +66,7 @@ public class TableRepositoryImpl implements TableRepository {
 
                     // Получение списка столбцов таблицы
 
-                    try (ResultSet columnsRS = metaData.getColumns(null, null, tableName, null)) {
+                    try (ResultSet columnsRS = metaData.getColumns(null, "public", tableName, null)) {
                         List<ColumnModel> columns = new ArrayList<>();
                         while (columnsRS.next()) {
                             ColumnModel column = new ColumnModel();
@@ -75,6 +75,8 @@ public class TableRepositoryImpl implements TableRepository {
                             column.setNullable(columnsRS.getString("IS_NULLABLE"));
                             column.setIsAutoIncrement(columnsRS.getString("IS_AUTOINCREMENT"));
                             column.setIsGeneratedColumn(columnsRS.getString("IS_GENERATEDCOLUMN"));
+                            column.setDefaultValue(columnsRS.getString("COLUMN_DEF"));
+                            column.setColumnSize(columnsRS.getString("COLUMN_SIZE"));
                             columns.add(column);
                         }
                         table.setColumns(columns);

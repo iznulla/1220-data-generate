@@ -15,6 +15,8 @@ public class ColumnModel {
     private String nullable;
     private String isAutoIncrement;
     private String isGeneratedColumn;
+    private String defaultValue;
+    private String columnSize;
     private short keySeq;
     private boolean isFk;
 }
