@@ -1,5 +1,6 @@
 package com.uzinfo.datagenerate.web.configuration.datasource;
 
+import com.uzinfo.datagenerate.web.entity.enums.Database;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -18,7 +19,7 @@ public class DataSourceTwoConfig {
     private String jdbcUrl;
     private String username;
     private String password;
-    private String platform;
+    private Database database;
     private String driverClassName;
     private String maximumPoolSize;
 

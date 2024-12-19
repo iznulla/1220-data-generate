@@ -1,6 +1,7 @@
 package com.uzinfo.datagenerate.web.api.datasource;
 
 import com.uzinfo.datagenerate.web.dto.datasource.DataSourceDto;
+import com.uzinfo.datagenerate.web.entity.enums.Database;
 import com.uzinfo.datagenerate.web.exception.ResourceNotFoundException;
 import com.uzinfo.datagenerate.web.service.datasource.DataSourcePropertiesService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 
 @RestController
 @RequiredArgsConstructor
@@ -98,6 +101,19 @@ public class DataSourceApi {
     @GetMapping("/name/{name}")
     public ResponseEntity<?> getByName(@PathVariable String name) {
         return new ResponseEntity<>(dataSourcePropertiesService.getByName(name), HttpStatus.OK);
+    }
+
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", content = { @Content(schema = @Schema(implementation = String.class)) }),
+            @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = ResourceNotFoundException.class)) }),
+            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
+    @Operation(
+            summary = "GET database names",
+            description = "Получает названия баз данных из базы данных"
+    )
+    @GetMapping("/databases-names")
+    public ResponseEntity<?> getDatabasesNames() {
+        return new ResponseEntity<>(Arrays.stream(Database.values()).map(Database::name), HttpStatus.OK);
     }
 
 

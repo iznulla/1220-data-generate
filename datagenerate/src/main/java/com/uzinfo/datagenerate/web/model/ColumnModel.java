@@ -2,8 +2,6 @@ package com.uzinfo.datagenerate.web.model;
 
 import lombok.*;
 
-import java.util.Map;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -18,5 +16,5 @@ public class ColumnModel {
     private String defaultValue;
     private String columnSize;
     private short keySeq;
-    private boolean isFk;
+    private String fKeyTableName;
 }

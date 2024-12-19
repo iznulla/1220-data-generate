@@ -3,6 +3,7 @@ package com.uzinfo.datagenerate.web.service.datasource;
 import com.uzinfo.datagenerate.web.configuration.datasource.*;
 import com.uzinfo.datagenerate.web.dto.datasource.DataSourceDto;
 import com.uzinfo.datagenerate.web.entity.DataBaseEntity;
+import com.uzinfo.datagenerate.web.entity.enums.Database;
 import com.uzinfo.datagenerate.web.entity.mapper.DataBaseEntityMapper;
 import com.uzinfo.datagenerate.web.exception.ResourceNotFoundException;
 import com.uzinfo.datagenerate.web.repository.base.DataSourcePropertiesRepository;
@@ -30,14 +31,15 @@ public class DataSourcePropertiesService {
 
     @Transactional
     public String setDataSourceProperties(Long id) {
-        DataSourceDto dataSourceDto = DataSourceDto.from(dataSourcePropertiesRepository.findById(id).orElseThrow(
+        DataSourceDto dataSourceDto = dataBaseEntityMapper.toDTO(dataSourcePropertiesRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Data Source not found with id " + id)
         ));
         try {
             dataSourceTwoConfig.setJdbcUrl(dataSourceDto.getUrl());
             dataSourceTwoConfig.setUsername(dataSourceDto.getUsername());
             dataSourceTwoConfig.setPassword(dataSourceDto.getPassword());
-            dataSourceTwoConfig.setDriverClassName(dataSourceDto.getDriver());
+            dataSourceTwoConfig.setDriverClassName(dataSourceDto.getDatabase().getDriver());
+            dataSourceTwoConfig.setDatabase(dataSourceDto.getDatabase());
             Map<Object, Object> dataSourceMap = new HashMap<>();
             dataSourceMap.put(DataSourceEnum.DATASOURCE_DEST, dataSourceRouting.dataSourceTwoDataSource());
             dataSourceRouting.setDataSourceMap(dataSourceMap);
@@ -59,13 +61,13 @@ public class DataSourcePropertiesService {
                 );
                 dataBaseEntityMapper.updateDataBaseEntityFromDTO(dataSourceDto, dataBaseEntity);
                 DataBaseEntity dataBaseEntitySaved = dataSourcePropertiesRepository.save(dataBaseEntity);
-                DataSourceDto dataSourceDtoResponse = DataSourceDto.from(dataBaseEntitySaved);
+                DataSourceDto dataSourceDtoResponse = dataBaseEntityMapper.toDTO(dataBaseEntitySaved);
                 dataSourceDtoResponse.setAddedStatus(true);
                 return dataSourceDtoResponse;
             } else {
                 DataBaseEntity dataBaseEntity = dataBaseEntityMapper.fromDTO(dataSourceDto);
                 DataBaseEntity savedDataBase = dataSourcePropertiesRepository.save(dataBaseEntity);
-                DataSourceDto dataSourceDtoResponse = DataSourceDto.from(savedDataBase);
+                DataSourceDto dataSourceDtoResponse = dataBaseEntityMapper.toDTO(savedDataBase);
                 dataSourceDtoResponse.setAddedStatus(true);
                 return dataSourceDtoResponse;
             }
@@ -76,13 +78,13 @@ public class DataSourcePropertiesService {
     }
 
     public DataSourceDto getByName(String name) {
-        return DataSourceDto.from(dataSourcePropertiesRepository.findByName(name).orElseThrow(
+        return dataBaseEntityMapper.toDTO(dataSourcePropertiesRepository.findByName(name).orElseThrow(
                 () -> new ResourceNotFoundException("Data Source not found with name " + name)
         ));
     }
 
     public DataSourceDto getById(Long id) {
-        return DataSourceDto.from(dataSourcePropertiesRepository.findById(id).orElseThrow(
+        return dataBaseEntityMapper.toDTO(dataSourcePropertiesRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Data Source not found with id " + id)
         ));
     }
@@ -95,7 +97,7 @@ public class DataSourcePropertiesService {
     }
 
     public List<DataSourceDto> getAll() {
-        return dataSourcePropertiesRepository.findAll().stream().map(DataSourceDto::from).toList();
+        return dataSourcePropertiesRepository.findAll().stream().map(dataBaseEntityMapper::toDTO).toList();
     }
 
 }

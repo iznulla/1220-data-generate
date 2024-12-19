@@ -13,7 +13,7 @@ public interface DataBaseEntityMapper {
 //    @Mapping(target = "addedStatus", ignore = true)
     DataBaseEntity fromDTO(DataSourceDto source);
 
-    DataSourceDto fromDataBaseEntity(DataBaseEntity source);
+    DataSourceDto toDTO(DataBaseEntity source);
 
     @Mapping(target = "id", ignore = true)
     void updateDataBaseEntityFromDTO(DataSourceDto source, @MappingTarget DataBaseEntity target);

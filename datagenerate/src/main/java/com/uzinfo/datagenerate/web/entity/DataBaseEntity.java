@@ -1,5 +1,6 @@
 package com.uzinfo.datagenerate.web.entity;
 
+import com.uzinfo.datagenerate.web.entity.enums.Database;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,4 +29,7 @@ public class DataBaseEntity {
     private String password;
     @Column(name = "driver")
     private String driver;
+    @Column(name = "database")
+    @Enumerated(EnumType.STRING)
+    private Database database;
 }
