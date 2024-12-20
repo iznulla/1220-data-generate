@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 @Data
@@ -98,7 +95,7 @@ public class TableRepositoryImpl implements TableRepository {
                                 column.setDefaultValue("NO");
                             }
                             column.setColumnSize(columnsRS.getString("COLUMN_SIZE"));
-                            column.setFKeyTableName(fkColumnsAndTables.get(columnsRS.getString("COLUMN_NAME")));
+                            column.setFKeyTableNames(new ArrayList<>(fkColumnsAndTables.values()));
                             columns.add(column);
                         }
                         table.setColumns(columns);
